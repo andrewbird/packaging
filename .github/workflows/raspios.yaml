@@ -23,7 +23,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y debootstrap
-          sudo debootstrap --arch ${{ matrix.target_arch }} --foreign bookworm `pwd`/raspios http://ftp2.de.debian.org/debian
+          sudo debootstrap --arch ${{ matrix.target_arch }} --foreign trixie `pwd`/raspios http://ftp2.de.debian.org/debian
           sudo cp /etc/resolv.conf raspios/etc/.
           sudo chroot raspios /bin/bash -c "/debootstrap/debootstrap --second-stage"
           #for i in dev proc sys ; do
