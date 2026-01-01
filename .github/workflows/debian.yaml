@@ -1,0 +1,99 @@
+name: Build And Package
+
+on:
+  push:
+  #    branches: [main]
+  #  pull_request:
+
+  workflow_dispatch:
+
+jobs:
+  build_for:
+    name: Build for
+
+    strategy:
+      matrix:
+        target_distro: [bookworm, trixie]
+        target_arch: [arm64, armhf, amd64, i386]
+        exclude:
+          - target_arch: armhf  # No binutils-i686-linux-gnu :-(
+      fail-fast: false
+
+    runs-on: ${{ startsWith(matrix.target_arch, 'arm') && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
+
+    env:
+      BDIR: 'debian'
+      TARGET: ${{ matrix.target_distro }}-${{ matrix.target_arch }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup build directory
+        run: |
+          mkdir ${BDIR}
+          cp -p scripts/*.sh ${BDIR}
+
+      - name: Set up for chroot
+        run: |
+          sudo apt update
+          sudo apt install -y debootstrap
+          sudo debootstrap --arch ${{ matrix.target_arch }} --foreign ${{ matrix.target_distro }} `pwd`/${BDIR} http://ftp2.de.debian.org/debian
+          sudo cp /etc/resolv.conf ${BDIR}/etc/.
+          sudo chroot ${BDIR} /bin/bash -c "/debootstrap/debootstrap --second-stage"
+          #for i in dev proc sys ; do
+          #  [ -d ${BDIR}/$i ] || sudo mkdir ${BDIR}/$i
+          #  sudo mount --bind /$1 ${BDIR}/$i
+          #done
+
+      - name: Set up in chroot environment
+        run: |
+          sudo chroot ${BDIR} /bin/bash -c ./build.sh
+
+      - name: Thunk-gen
+        run: |
+          sudo chroot ${BDIR} /bin/bash -c ./build-thunk-gen.sh
+
+      - name: SmallerC
+        run: |
+          sudo chroot ${BDIR} /bin/bash -c ./build-smallerc.sh
+
+      - name: Djstub
+        run: |
+          sudo chroot ${BDIR} /bin/bash -c ./build-djstub.sh
+
+      - name: Dj64dev
+        run: |
+          sudo chroot ${BDIR} /bin/bash -c ./build-dj64dev.sh
+
+      - name: Nasm-segelf
+        run: |
+          sudo chroot ${BDIR} /bin/bash -c ./build-nasm-segelf.sh
+
+      - name: Fdpp
+        run: |
+          sudo chroot ${BDIR} /bin/bash -c ./build-fdpp.sh
+
+      - name: Comcom64
+        run: |
+          sudo chroot ${BDIR} /bin/bash -c ./build-comcom64.sh
+
+      - name: Dosemu2
+        run: |
+          sudo chroot ${BDIR} /bin/bash -c ./build-dosemu2.sh
+
+      - name: Install FreeDOS Userspace
+        run: |
+          sudo chroot ${BDIR} /bin/bash -c ./build-insfdusr.sh
+
+      - name: Upload packages as RaspiOS
+        if: matrix.target_arch == 'arm64'
+        uses: actions/upload-artifact@v4
+        with:
+          name: RaspiOS-${{ matrix.target_distro }}-${{ matrix.target_arch }}
+          path: ${{ env.BDIR }}/*.deb
+
+      - name: Upload packages as Debian
+        uses: actions/upload-artifact@v4
+        with:
+          name: Debian-${{ matrix.target_distro }}-${{ matrix.target_arch }}
+          path: ${{ env.BDIR }}/*.deb
