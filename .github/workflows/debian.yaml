@@ -23,7 +23,8 @@ jobs:
 
     env:
       BDIR: 'debian'
-      TARGET: ${{ matrix.target_distro }}-${{ matrix.target_arch }}
+      TARGET_DISTRO: ${{ matrix.target_distro }}
+      TARGET_ARCH: ${{ matrix.target_arch }}
 
     steps:
       - uses: actions/checkout@v4
@@ -47,43 +48,43 @@ jobs:
 
       - name: Set up in chroot environment
         run: |
-          sudo chroot ${BDIR} /bin/bash -c ./build.sh
+          sudo chroot ${BDIR} /bin/bash -c "./build.sh ${TARGET_DISTRO} ${TARGET_ARCH}"
 
       - name: Thunk-gen
         run: |
-          sudo chroot ${BDIR} /bin/bash -c ./build-thunk-gen.sh
+          sudo chroot ${BDIR} /bin/bash -c "./build-thunk-gen.sh ${TARGET_DISTRO} ${TARGET_ARCH}"
 
       - name: SmallerC
         run: |
-          sudo chroot ${BDIR} /bin/bash -c ./build-smallerc.sh
+          sudo chroot ${BDIR} /bin/bash -c "./build-smallerc.sh ${TARGET_DISTRO} ${TARGET_ARCH}"
 
       - name: Djstub
         run: |
-          sudo chroot ${BDIR} /bin/bash -c ./build-djstub.sh
+          sudo chroot ${BDIR} /bin/bash -c "./build-djstub.sh ${TARGET_DISTRO} ${TARGET_ARCH}"
 
       - name: Dj64dev
         run: |
-          sudo chroot ${BDIR} /bin/bash -c ./build-dj64dev.sh
+          sudo chroot ${BDIR} /bin/bash -c "./build-dj64dev.sh ${TARGET_DISTRO} ${TARGET_ARCH}"
 
       - name: Nasm-segelf
         run: |
-          sudo chroot ${BDIR} /bin/bash -c ./build-nasm-segelf.sh
+          sudo chroot ${BDIR} /bin/bash -c "./build-nasm-segelf.sh ${TARGET_DISTRO} ${TARGET_ARCH}"
 
       - name: Fdpp
         run: |
-          sudo chroot ${BDIR} /bin/bash -c ./build-fdpp.sh
+          sudo chroot ${BDIR} /bin/bash -c "./build-fdpp.sh ${TARGET_DISTRO} ${TARGET_ARCH}"
 
       - name: Comcom64
         run: |
-          sudo chroot ${BDIR} /bin/bash -c ./build-comcom64.sh
+          sudo chroot ${BDIR} /bin/bash -c "./build-comcom64.sh ${TARGET_DISTRO} ${TARGET_ARCH}"
 
       - name: Dosemu2
         run: |
-          sudo chroot ${BDIR} /bin/bash -c ./build-dosemu2.sh
+          sudo chroot ${BDIR} /bin/bash -c "./build-dosemu2.sh ${TARGET_DISTRO} ${TARGET_ARCH}"
 
       - name: Install FreeDOS Userspace
         run: |
-          sudo chroot ${BDIR} /bin/bash -c ./build-insfdusr.sh
+          sudo chroot ${BDIR} /bin/bash -c "./build-insfdusr.sh ${TARGET_DISTRO} ${TARGET_ARCH}"
 
       - name: Upload packages as RaspiOS
         if: matrix.target_arch == 'arm64'
