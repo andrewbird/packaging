@@ -15,8 +15,6 @@ jobs:
       matrix:
         target_distro: [bookworm, trixie]
         target_arch: [arm64, armhf, amd64, i386]
-        exclude:
-          - target_arch: armhf  # No binutils-i686-linux-gnu :-(
       fail-fast: false
 
     runs-on: ${{ startsWith(matrix.target_arch, 'arm') && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
@@ -87,7 +85,7 @@ jobs:
           sudo chroot ${BDIR} /bin/bash -c "./build-insfdusr.sh ${TARGET_DISTRO} ${TARGET_ARCH}"
 
       - name: Upload packages as RaspiOS
-        if: matrix.target_arch == 'arm64'
+        if: matrix.target_arch == 'arm64' || matrix.target_arch == 'armhf'
         uses: actions/upload-artifact@v4
         with:
           name: RaspiOS-${{ matrix.target_distro }}-${{ matrix.target_arch }}
