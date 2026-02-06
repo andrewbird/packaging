@@ -2,6 +2,13 @@
 
 set -e
 
+TARGET_DISTRO="$1"
+TARGET_ARCH="$2"
+
+if [ "${TARGET_ARCH}" = "armhf" ] ; then
+  echo "Don't need nasm-segelf when using ld.lld"
+ else
+
 git clone https://github.com/stsp/nasm-segelf.git nasm-segelf.git
 (
   cd nasm-segelf.git
@@ -12,4 +19,6 @@ git clone https://github.com/stsp/nasm-segelf.git nasm-segelf.git
 
 if [ "$(pwd)" = "/" ] ; then
 	sudo apt install -y -f ./nasm-segelf*.deb
+fi
+
 fi
