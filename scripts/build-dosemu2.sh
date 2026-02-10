@@ -8,6 +8,8 @@ set -e
 git clone https://github.com/dosemu2/dosemu2.git dosemu2.git
 (
   cd dosemu2.git
+  git fetch origin pull/2769/head:pr2769
+  git switch pr2769
   if [ "$TARGET_ARCH" = "armhf" ] ; then
     sed -i -e 's/binutils-i686-linux-gnu/llvm, lld/g' debian/control
   fi
