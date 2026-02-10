@@ -13,8 +13,10 @@ jobs:
 
     strategy:
       matrix:
-        target_distro: [bookworm, trixie]
-        target_arch: [arm64, armhf, amd64, i386]
+        #target_distro: [bookworm, trixie]
+        #target_arch: [arm64, armhf, amd64, i386]
+        target_distro: [trixie]
+        target_arch: [arm64]
       fail-fast: false
 
     runs-on: ${{ startsWith(matrix.target_arch, 'arm') && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
@@ -91,8 +93,8 @@ jobs:
           name: RaspiOS-${{ matrix.target_distro }}-${{ matrix.target_arch }}
           path: ${{ env.BDIR }}/*.deb
 
-      - name: Upload packages as Debian
-        uses: actions/upload-artifact@v4
-        with:
-          name: Debian-${{ matrix.target_distro }}-${{ matrix.target_arch }}
-          path: ${{ env.BDIR }}/*.deb
+            #      - name: Upload packages as Debian
+            #        uses: actions/upload-artifact@v4
+            #        with:
+            #          name: Debian-${{ matrix.target_distro }}-${{ matrix.target_arch }}
+            #          path: ${{ env.BDIR }}/*.deb
