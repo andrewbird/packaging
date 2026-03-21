@@ -25,7 +25,7 @@ jobs:
       TARGET_ARCH: ${{ matrix.target_arch }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup build directory
         run: |
@@ -86,13 +86,13 @@ jobs:
 
       - name: Upload packages as RaspiOS
         if: matrix.target_arch == 'arm64' || matrix.target_arch == 'armhf'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: RaspiOS-${{ matrix.target_distro }}-${{ matrix.target_arch }}
           path: ${{ env.BDIR }}/*.deb
 
       - name: Upload packages as Debian
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: Debian-${{ matrix.target_distro }}-${{ matrix.target_arch }}
           path: ${{ env.BDIR }}/*.deb
