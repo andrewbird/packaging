@@ -5,7 +5,7 @@ set -e
 TARGET_DISTRO="$1"
 TARGET_ARCH="$2"
 
-if [ "${TARGET_DISTRO}" = "trixie" ] ; then
+if [ "${TARGET_DISTRO}" = "somefuture" ] ; then
   echo "Version included in Debian is suitable"
 else
   git clone https://github.com/stsp/djstub.git djstub.git
