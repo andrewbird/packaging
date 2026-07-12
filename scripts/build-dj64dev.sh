@@ -22,5 +22,5 @@ git clone https://github.com/stsp/dj64dev.git dj64dev.git
 ls -ltr *.deb
 
 if [ "$(pwd)" = "/" ] ; then
-	sudo apt install -y -f ./libdjdev*.deb ./libdjstub*.deb ./dj*.deb
+	sudo apt install -y -f ./dj[36][24]*.deb
 fi

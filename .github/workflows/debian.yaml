@@ -60,6 +60,10 @@ jobs:
         run: |
           sudo chroot ${BDIR} /bin/bash -c "./build-djstub.sh ${TARGET_DISTRO} ${TARGET_ARCH}"
 
+      - name: Djdev64
+        run: |
+          sudo chroot ${BDIR} /bin/bash -c "./build-djdev64.sh ${TARGET_DISTRO} ${TARGET_ARCH}"
+
       - name: Dj64dev
         run: |
           sudo chroot ${BDIR} /bin/bash -c "./build-dj64dev.sh ${TARGET_DISTRO} ${TARGET_ARCH}"
