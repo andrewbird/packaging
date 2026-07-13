@@ -64,9 +64,9 @@ jobs:
         run: |
           sudo chroot ${BDIR} /bin/bash -c "./build-dj64dev.sh ${TARGET_DISTRO} ${TARGET_ARCH}"
 
-      - name: Nasm-segelf
-        run: |
-          sudo chroot ${BDIR} /bin/bash -c "./build-nasm-segelf.sh ${TARGET_DISTRO} ${TARGET_ARCH}"
+#      - name: Nasm-segelf
+#        run: |
+#          sudo chroot ${BDIR} /bin/bash -c "./build-nasm-segelf.sh ${TARGET_DISTRO} ${TARGET_ARCH}"
 
       - name: Fdpp
         run: |
